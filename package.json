@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@silvermine/videojs-quality-selector": "^1.3.0",
+    "video.js": "^7.21.4",
+    "videojs-contrib-quality-levels": "^3.0.0",
+    "videojs-hls-quality-selector": "^1.1.4"
+  }
+}

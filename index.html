@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video.js Demo</title>
+    <link rel="stylesheet" href="plugins//video.js/v7/video-js.min.css">
+    <link rel="stylesheet" href="plugins/videojs-hls-quality-selector/videojs-hls-quality-selector.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        .video-js {
+            width: 100%;
+            max-width: 640px !important;
+            margin: 0 auto;
+        }
+
+        .video-js .vjs-big-play-button {
+            top: 50%;
+            left: 50%;
+            margin-left: -45px;
+            margin-top: -25px;
+        }
+
+        @media (min-width: 640px) {
+            .video-js.vjs-16-9:not(.vjs-audio-only-mode) {
+                padding-top: 360px;
+            }
+        }
+    </style>
+    <!-- theme fantasy -->
+    <style>
+        .vjs-theme-fantasy {
+            /* --vjs-theme-fantasy--primary: #9f44b4; */
+            --vjs-theme-fantasy--primary: #44b45c;
+            --vjs-theme-fantasy--secondary: #fff
+        }
+
+        .vjs-theme-fantasy .vjs-big-play-button {
+            background: none;
+            border: none;
+            color: var(--vjs-theme-fantasy--primary);
+            font-size: 80px;
+            height: 70px;
+            left: 50%;
+            line-height: 70px;
+            margin-left: -35px;
+            margin-top: -35px;
+            top: 50%;
+            width: 70px
+        }
+
+        .vjs-theme-fantasy.vjs-big-play-button:focus,
+        .vjs-theme-fantasy:hover .vjs-big-play-button {
+            background-color: transparent;
+            color: #fff
+        }
+
+        .vjs-theme-fantasy .vjs-control-bar {
+            height: 54px
+        }
+
+        .vjs-theme-fantasy .vjs-button>.vjs-icon-placeholder:before,
+        .vjs-theme-fantasy .vjs-time-control {
+            line-height: 54px
+        }
+
+        .vjs-theme-fantasy .vjs-play-control {
+            font-size: 1.5em;
+            position: relative
+        }
+
+        .vjs-theme-fantasy .vjs-volume-panel {
+            order: 4
+        }
+
+        .vjs-theme-fantasy .vjs-volume-bar {
+            margin-top: 2.5em
+        }
+
+        .vjs-theme-city .vjs-volume-panel:hover .vjs-volume-control.vjs-volume-horizontal {
+            height: 100%
+        }
+
+        .vjs-theme-fantasy .vjs-progress-control .vjs-progress-holder,
+        .vjs-theme-fantasy .vjs-progress-control:hover .vjs-progress-holder {
+            font-size: 1.5em
+        }
+
+        .vjs-theme-fantasy .vjs-play-control .vjs-icon-placeholder:before {
+            border: 3px solid var(--vjs-theme-fantasy--secondary);
+            border-radius: 1em;
+            height: 1.3em;
+            left: 9px;
+            line-height: 1.1;
+            margin-top: .2em;
+            top: 2px;
+            width: 1.3em
+        }
+
+        .vjs-theme-fantasy .vjs-play-control:hover .vjs-icon-placeholder:before {
+            border: 3px solid var(--vjs-theme-fantasy--secondary)
+        }
+
+        .vjs-theme-fantasy .vjs-play-progress,
+        .vjs-theme-fantasy .vjs-play-progress:before {
+            background-color: var(--vjs-theme-fantasy--primary)
+        }
+
+        .vjs-theme-fantasy .vjs-play-progress:before {
+            border: 4px solid var(--vjs-theme-fantasy--secondary);
+            border-radius: .8em;
+            content: "";
+            height: .8em;
+            top: -.25em;
+            width: .8em
+        }
+
+        .vjs-theme-fantasy .vjs-progress-control {
+            font-size: 14px
+        }
+
+        .vjs-theme-fantasy .vjs-fullscreen-control {
+            order: 6
+        }
+
+        .vjs-theme-fantasy .vjs-remaining-time {
+            display: none
+        }
+
+        .vjs-theme-fantasy.nyan .vjs-play-progress {
+            background: linear-gradient(180deg, #fe0000, #fe9a01 16.666666667%, #fe9a01 0, #ff0 33.332666667%, #ff0 0, #32ff00 49.999326667%, #32ff00 0, #0099fe 66.6659926%, #0099fe 0, #63f 83.33266%, #63f 0)
+        }
+
+        .vjs-theme-fantasy.nyan .vjs-play-progress:before {
+            background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 100 125'%3E%3Cpath d='M62.153 37.323h2.813v3.246h-2.813zm2.705 3.246h2.813v3.246h-2.813zm2.814 3.245h11.9v3.246h-11.9zm11.9-19.365h2.813v19.365h-2.813zm2.814 12.874h3.244v3.246h-3.244zm3.244-3.191h5.627v3.246H85.63zm5.627 3.191h2.92v12.95h-2.92zm2.92 12.951h2.922V66.21h-2.922zM91.29 66.372h2.887v3.245H91.29zm-2.889 3.245h2.889v3.246h-2.889zm-61.089 3.246h61.003v3.245H27.312zm46.31 3.245h2.889v3.246h-2.889zm8.941 0h2.888v3.246h-2.888zm-6.052 3.246h6.053v3.245h-6.053zm-14.57 0h8.895v3.245h-8.895zm6.006-3.246h2.889v3.246h-2.889zm-8.626 0h2.888v3.246h-2.888zM27.312 17.917h49.387v3.246H27.312zm49.387 3.245h2.873v3.287h-2.873zm-20.327 12.97h5.781v3.191h-5.781zm-2.924 3.191h2.924v12.951h-2.924zm-2.96 12.951h2.96v16.049h-2.96zm2.96 16.049h2.924v3.257h-2.924zm2.924 3.257h2.949v3.283h-2.949zm8.697-6.367h2.878v6.367h-2.878zm2.878 3.184h17.504v3.22H67.947z'/%3E%3Cpath d='M82.563 63.213h2.888v3.185h-2.888zm-8.762 0h2.898v3.185h-2.898zm2.898-6.439h2.873v3.145h-2.873zm5.864 0h2.888v3.145h-2.888zm2.888-3.33h2.864v3.33h-2.864z'/%3E%3Cpath d='M85.451 56.774h2.864v3.145h-2.864zm-20.382-3.33h2.878v3.33h-2.878zm0 3.33h2.878v3.145h-2.878zm-2.86 0h2.86v3.145h-2.86zm-40.7-32.447h2.813v45.169h-2.813zm2.814-3.165h2.99v3.165h-2.99zm-5.761 48.334h8.75v3.367h-8.75zm-2.906 3.367h2.906v9.591h-2.906zm2.906 6.438h8.75v3.153h-8.75zm5.761-3.193h5.743V79.3h-5.743zm8.813 0h2.824v6.346h-2.824zm2.824 3.173h5.813v3.173H35.96zm5.814-3.173h2.864v3.173h-2.864zM3.948 40.569h11.708v3.229H3.948zm0 3.245h2.921v6.459H3.948zm2.921 3.246h2.934v6.384H6.869zm2.934 3.214h2.909v6.5H9.803z'/%3E%3Cpath d='M12.711 53.444h2.945v6.475h-2.945zm2.945 3.33h5.853v3.145h-5.853z'/%3E%3Cpath d='M18.583 59.919h2.926v3.294h-2.926zm0-12.875h2.926v6.4h-2.926zm-5.872-3.23h5.872v3.229h-5.872zm2.936 3.23h2.936v3.2h-2.936z'/%3E%3Cpath fill='none' d='M47.439 50.274h3.049v3.17h-3.049z'/%3E%3Cpath d='M73.801 30.94v-3.138h-2.965v-3.354l-37.7-.122v3.151h-3.07v3.462l-2.753-.108-.118 32.381h2.871v3.185h3.07v-3.185h2.824v3.185h-2.824v3.099l20.312.084v-3.257h-2.96V50.274h2.96V37.323h2.924v-3.191h5.781v3.191h2.813l-.108 3.246h2.813v3.246h9.027V30.94h-2.897zM33.136 56.682h-3.07v-3.158h3.07v3.158zm2.824-22.55h-2.824v-3.084h2.824v3.084zm2.907 12.928h2.907v3.184h-2.907V47.06zm5.771 16.153h-2.864v-3.294h2.864v3.294zm2.801-19.399h-2.801v-3.246h2.801v3.246zm6.009-12.766h-2.96v-3.354h2.96v3.354zm8.705 0h-2.832v-3.354h2.832v3.354zm8.683 6.275h-2.889v-3.191h2.889v3.191z'/%3E%3C/svg%3E") no-repeat;
+            border: none;
+            height: 1.3em;
+            top: -.35em;
+            width: 1.3em
+        }
+    </style>
+    <!-- theme forest -->
+    <style>
+        .vjs-theme-forest {
+            --vjs-theme-forest--primary: #6fb04e;
+            --vjs-theme-forest--secondary: #fff
+        }
+
+        .vjs-theme-forest.vjs-big-play-button:focus,
+        .vjs-theme-forest:hover .vjs-big-play-button {
+            background-color: transparent;
+            background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='88' fill='%236fb04e'%3E%3Cpath fill-rule='evenodd' d='M44 88C19.738 88 0 68.262 0 44S19.738 0 44 0s44 19.738 44 44-19.738 44-44 44zm0-85C21.393 3 3 21.393 3 44c0 22.608 18.393 41 41 41s41-18.392 41-41C85 21.393 66.607 3 44 3zm16.063 43.898L39.629 60.741a3.496 3.496 0 0 1-3.604.194 3.492 3.492 0 0 1-1.859-3.092V30.158c0-1.299.712-2.483 1.859-3.092a3.487 3.487 0 0 1 3.604.194l20.433 13.843a3.497 3.497 0 0 1 .001 5.795zm-1.683-3.311L37.946 29.744a.49.49 0 0 0-.276-.09.51.51 0 0 0-.239.062.483.483 0 0 0-.265.442v27.685c0 .262.166.389.265.442.1.053.299.118.515-.028L58.38 44.414A.489.489 0 0 0 58.6 44a.49.49 0 0 0-.22-.413z'/%3E%3C/svg%3E")
+        }
+
+        .vjs-theme-forest .vjs-big-play-button {
+            background: none;
+            background-position: 50%;
+            background-repeat: no-repeat;
+            background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='88' fill='%23fff'%3E%3Cpath fill-rule='evenodd' d='M44 88C19.738 88 0 68.262 0 44S19.738 0 44 0s44 19.738 44 44-19.738 44-44 44zm0-85C21.393 3 3 21.393 3 44c0 22.608 18.393 41 41 41s41-18.392 41-41C85 21.393 66.607 3 44 3zm16.063 43.898L39.629 60.741a3.496 3.496 0 0 1-3.604.194 3.492 3.492 0 0 1-1.859-3.092V30.158c0-1.299.712-2.483 1.859-3.092a3.487 3.487 0 0 1 3.604.194l20.433 13.843a3.497 3.497 0 0 1 .001 5.795zm-1.683-3.311L37.946 29.744a.49.49 0 0 0-.276-.09.51.51 0 0 0-.239.062.483.483 0 0 0-.265.442v27.685c0 .262.166.389.265.442.1.053.299.118.515-.028L58.38 44.414A.489.489 0 0 0 58.6 44a.49.49 0 0 0-.22-.413z'/%3E%3C/svg%3E");
+            border: none;
+            color: purple;
+            height: 88px;
+            left: 50%;
+            margin-left: -44px;
+            margin-top: -44px;
+            top: 50%;
+            width: 88px
+        }
+
+        .vjs-theme-forest .vjs-big-play-button .vjs-icon-placeholder {
+            display: none
+        }
+
+        .vjs-theme-forest .vjs-button>.vjs-icon-placeholder:before {
+            line-height: 1.55
+        }
+
+        .vjs-theme-forest .vjs-control:not(.vjs-disabled):not(.vjs-time-control):hover {
+            color: var(--vjs-theme-forest--primary);
+            text-shadow: var(--vjs-theme-forest--secondary) 1px 0 10px
+        }
+
+        .vjs-theme-forest .vjs-control-bar {
+            background: none;
+            margin-bottom: 1em;
+            padding-left: 1em;
+            padding-right: 1em
+        }
+
+        .vjs-theme-forest .vjs-play-control {
+            font-size: .8em
+        }
+
+        .vjs-theme-forest .vjs-play-control .vjs-icon-placeholder:before {
+            background-color: var(--vjs-theme-forest--secondary);
+            border-radius: 1em;
+            color: var(--vjs-theme-forest--primary);
+            height: 1.5em;
+            margin-top: .2em;
+            width: 1.5em
+        }
+
+        .vjs-theme-forest .vjs-play-control:hover .vjs-icon-placeholder:before {
+            background-color: var(--vjs-theme-forest--primary);
+            color: var(--vjs-theme-forest--secondary)
+        }
+
+        .vjs-theme-forest .vjs-mute-control {
+            display: none
+        }
+
+        .vjs-theme-forest .vjs-volume-panel {
+            margin-left: .5em;
+            margin-right: .5em;
+            padding-top: .3em
+        }
+
+        .vjs-theme-forest .vjs-volume-bar.vjs-slider-horizontal,
+        .vjs-theme-forest .vjs-volume-panel,
+        .vjs-theme-forest .vjs-volume-panel.vjs-volume-panel-horizontal:hover,
+        .vjs-theme-forest .vjs-volume-panel:active .vjs-volume-control.vjs-volume-horizontal,
+        .vjs-theme-forest .vjs-volume-panel:hover,
+        .vjs-theme-forest .vjs-volume-panel:hover .vjs-volume-control.vjs-volume-horizontal {
+            width: 3em
+        }
+
+        .vjs-theme-forest .vjs-volume-level:before {
+            font-size: 1em
+        }
+
+        .vjs-theme-forest .vjs-volume-panel .vjs-volume-control {
+            height: 100%;
+            opacity: 1;
+            width: 100%
+        }
+
+        .vjs-theme-forest .vjs-volume-bar {
+            background-color: transparent;
+            margin: 0
+        }
+
+        .vjs-theme-forest .vjs-slider-horizontal .vjs-volume-level {
+            height: 100%
+        }
+
+        .vjs-theme-forest .vjs-volume-bar.vjs-slider-horizontal {
+            height: 100%;
+            margin-bottom: 0;
+            margin-top: 0
+        }
+
+        .vjs-theme-forest .vjs-volume-bar:before {
+            border-bottom: 2em solid var(--vjs-theme-forest--primary);
+            border-left: 3em solid transparent;
+            border-right: 0 solid transparent;
+            border-top: 0 solid transparent;
+            content: "";
+            height: 0;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 0;
+            z-index: 0
+        }
+
+        .vjs-theme-forest .vjs-volume-level {
+            background-color: transparent;
+            overflow: hidden
+        }
+
+        .vjs-theme-forest .vjs-volume-level:before {
+            border-bottom: 2em solid var(--vjs-theme-forest--secondary);
+            border-left: 3em solid transparent;
+            border-right: 0 solid transparent;
+            border-top: 0 solid transparent;
+            content: "";
+            height: 0;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 0;
+            z-index: 1
+        }
+
+        .vjs-theme-forest .vjs-progress-control:hover .vjs-progress-holder {
+            font-size: 1em
+        }
+
+        .vjs-theme-forest .vjs-play-progress:before {
+            display: none
+        }
+
+        .vjs-theme-forest .vjs-progress-holder {
+            border-radius: .2em;
+            height: .5em;
+            margin: 0
+        }
+
+        .vjs-theme-forest .vjs-load-progress,
+        .vjs-theme-forest .vjs-load-progress div,
+        .vjs-theme-forest .vjs-play-progress {
+            border-radius: .2em
+        }
+    </style>
+    <!-- theme sea -->
+    <style>
+        .vjs-theme-sea .vjs-big-play-button {
+            background-color: hsla(0, 0%, 100%, .25);
+            border: none;
+            border-radius: 30px;
+            height: 79px;
+            left: 50%;
+            line-height: 79px;
+            margin: -51.5px auto 0 -39.5px;
+            -o-object-fit: contain;
+            object-fit: contain;
+            top: 50%;
+            width: 103px
+        }
+
+        .vjs-theme-sea .vjs-control-bar {
+            background-color: hsla(0, 0%, 100%, .4);
+            height: 4em
+        }
+
+        .vjs-theme-sea .vjs-button:hover {
+            background: linear-gradient(0deg, #d0ddee, #fff);
+            color: #4176bc
+        }
+
+        .vjs-theme-sea .vjs-button>.vjs-icon-placeholder:before {
+            line-height: 2.2
+        }
+
+        .vjs-theme-sea .vjs-time-control {
+            line-height: 4em
+        }
+
+        .vjs-theme-sea .vjs-picture-in-picture-control,
+        .vjs-theme-sea .vjs-volume-panel {
+            display: none
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-play-progress {
+            background-color: rgba(65, 118, 188, .9)
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-play-progress:before {
+            display: none
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-slider {
+            background-color: rgba(65, 118, 188, .1)
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-load-progress div {
+            background: hsla(0, 0%, 100%, .5)
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-progress-holder {
+            height: 100%;
+            margin: 0
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-time-tooltip {
+            background-color: rgba(65, 118, 188, .5);
+            color: #fff
+        }
+
+        .vjs-theme-sea .vjs-progress-control .vjs-mouse-display .vjs-time-tooltip {
+            background-color: hsla(0, 0%, 100%, .7);
+            color: #4176bc
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="text-align: center;">
+        <h1 style="margin-bottom: 2rem">Video.js Demo</h1>
+
+        <video id="my-video" class="video-js vjs-16-9" controls preload="auto" poster="//vjs.zencdn.net/v/oceans.png">
+            <source src="./media/hls.m3u8" type="application/x-mpegURL">
+            <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a
+                web browser that
+                <a href="https://videojs.com/html5-video-support/" target="_blank">
+                    supports HTML5 video
+                </a>
+            </p>
+        </video>
+    </div>
+
+    <script src="plugins//video.js/v7/video.min.js"></script>
+    <script src="plugins/videojs-contrib-quality-levels/v3/videojs-contrib-quality-levels.min.js"></script>
+    <script src="plugins/videojs-hls-quality-selector/videojs-hls-quality-selector.min.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            // Initialize VideoJs player
+            var config = {
+                playbackRates: [0.5, 1, 1.5, 2],
+            };
+            var player = videojs('my-video', config);
+            player.hlsQualitySelector({ displayCurrentQuality: true });
+        })()
+    </script>
+</body>
+
+</html>
